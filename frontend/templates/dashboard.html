@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DomaticSec - Dashboard</title>
+
+    
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- CSS EXTERNO -->
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+    <div class="header-left">
+        <button class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <div class="logo">
+            <div class="logo-icon">⚡</div>
+            <h1>DomaticSec</h1>
+        </div>
+    </div>
+
+    <div class="header-right">
+        <div class="user-info">
+            <div class="user-avatar" id="user-avatar">A</div>
+            <div class="user-details">
+                <span class="user-name" id="user-name">Administrador</span>
+                <span class="user-role" id="user-role">admin</span>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Overlay -->
+<div class="overlay" id="overlay"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+    <nav class="menu">
+        <div class="menu-section">
+            <div class="menu-section-title">Principal</div>
+            <a href="/dashboard" class="menu-item active">
+                <i class="fas fa-video"></i>
+                <span>Monitoreo en Vivo</span>
+            </a>
+            <a href="/consumption" class="menu-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Análisis de Consumo</span>
+            </a>
+        </div>
+
+        <div class="menu-section" id="admin-section">
+            <div class="menu-section-title">Administración</div>
+            <a href="/users" class="menu-item">
+                <i class="fas fa-users"></i>
+                <span>Gestión de Usuarios</span>
+            </a>
+        </div>
+
+        <div class="menu-section">
+            <a href="#" class="menu-item" id="logout-menu" style="color: #f44336;">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Cerrar Sesión</span>
+            </a>
+        </div>
+    </nav>
+</aside>
+
+<!-- Main Content -->
+<main class="main-content" id="main-content">
+
+    <!-- Welcome -->
+    <div class="welcome-card">
+        <h2>Bienvenido de nuevo, <span id="welcome-name">admin</span> 👋</h2>
+        <p>Sistema de Control Inteligente de Energía en funcionamiento</p>
+    </div>
+
+    <!-- Layout: Cámara IZQUIERDA + Stats DERECHA -->
+    <div class="dashboard-layout">
+        
+        <!-- COLUMNA IZQUIERDA: CÁMARA (SIN FOOTER) -->
+        <div class="camera-column">
+            <div class="camera-card">
+                <div class="camera-header">
+                    <i class="fas fa-video"></i>
+                    <span>MONITOREO EN TIEMPO REAL</span>
+                </div>
+                <div class="camera-container">
+                    <img id="camera-feed" class="camera-feed" src="" alt="Cámara en vivo">
+                    <div class="camera-confidence">
+                        Persona: <span id="cam-confidence">0.00</span>
+                    </div>
+                </div>
+                <!-- ELIMINADO: camera-footer con personas, luces, AC -->
+            </div>
+        </div>
+
+        <!-- COLUMNA DERECHA: ESTADÍSTICAS -->
+        <div class="stats-column">
+            
+            <!-- Tarjeta Personas -->
+            <div class="stat-card">
+                <div class="stat-icon-circle">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>PERSONAS DETECTADAS</h3>
+                    <p class="stat-subtitle">En sala principal</p>
+                    <div class="stat-value" id="people-stat">0</div>
+                </div>
+            </div>
+
+            <!-- Tarjeta Luces -->
+            <div class="stat-card">
+                <div class="stat-icon-circle lights-icon">
+                    <i class="fas fa-lightbulb"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>ESTADO DE LUCES</h3>
+                    <p class="stat-subtitle">Control automático</p>
+                    <div class="stat-value" id="lights-stat">OFF</div>
+                </div>
+            </div>
+
+            <!-- Tarjeta Aire Acondicionado -->
+            <div class="stat-card">
+                <div class="stat-icon-circle ac-icon">
+                    <i class="fas fa-wind"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>AIRE ACONDICIONADO</h3>
+                    <p class="stat-subtitle">Control automático</p>
+                    <div class="stat-value" id="ac-stat">OFF</div>
+                </div>
+            </div>
+
+            <!-- Tarjeta Consumo -->
+            <div class="stat-card">
+                <div class="stat-icon-circle power-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>CONSUMO ACTUAL</h3>
+                    <p class="stat-subtitle">En tiempo real</p>
+                    <div class="stat-value" id="power-stat">0</div>
+                    <span class="stat-unit">Watts</span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+<!-- Modal -->
+<div class="modal" id="logout-modal">
+    <div class="modal-content">
+        <div class="modal-icon">
+            <i class="fas fa-sign-out-alt"></i>
+        </div>
+        <h2 class="modal-title">¿Cerrar Sesión?</h2>
+        <p class="modal-text">¿Estás seguro que deseas salir del sistema?</p>
+        <div class="modal-buttons">
+            <button class="btn btn-secondary" id="cancel-logout">Cancelar</button>
+            <button class="btn btn-primary" id="confirm-logout">Cerrar Sesión</button>
+        </div>
+    </div>
+</div>
+
+<!-- JS -->
+<script src="/static/js/main.js"></script>
+<script src="/static/js/dashboard.js"></script>
+</body>
+</html>

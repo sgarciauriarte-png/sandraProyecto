@@ -1,0 +1,26 @@
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+websockets==12.0
+python-multipart==0.0.6
+
+# ==================== DB ====================
+sqlalchemy==2.0.36
+pymysql==1.1.1
+
+# ==================== UTILITIES ====================
+python-dotenv==1.0.1
+pydantic==2.10.3
+
+# ==================== SECURITY (básico) ====================
+bcrypt==4.2.0
+itsdangerous==2.2.0
+cryptography==43.0.0
+
+# ==================== COMPUTER VISION (LIGERO) ====================
+opencv-python==4.10.0.84
+numpy==1.26.4
+Pillow==10.4.0
+ultralytics==8.3.0
+
+# ==================== MQTT ====================
+paho-mqtt==1.6.1

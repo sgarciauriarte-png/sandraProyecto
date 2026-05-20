@@ -1,0 +1,28 @@
+# Modelos YOLOv8 (muy pesados)
+*.pt
+yolov8n_ncnn_model/
+
+# Entorno virtual Python
+venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Base de datos
+*.db
+*.sqlite3
+
+# Videos e imágenes capturadas
+*.mp4
+*.avi
+*.jpg
+*.jpeg
+*.png
+
+# Logs
+*.log
+
+# Windows
+run.bat

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DomaticSec - Iniciar Sesión</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/login.css">
+</head>
+<body>
+    <div class="login-container">
+        <!-- Lado Izquierdo -->
+        <div class="login-left">
+            <h1>🔐 DomaticSec</h1>
+            <p>Sistema Inteligente de Control de Energía</p>
+            <p style="font-size: 0.9em; opacity: 0.8;">
+                Monitoreo en tiempo real • Detección automática • Ahorro energético
+            </p>
+            <div class="illustration">⚡</div>
+        </div>
+
+        <!-- Lado Derecho -->
+        <div class="login-right">
+            <!-- Mensajes -->
+            <div id="error-message" class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="error-text"></span>
+            </div>
+            <div id="success-message" class="success-message">
+                <i class="fas fa-check-circle"></i>
+                <span id="success-text"></span>
+            </div>
+
+            <!-- Formulario de Login -->
+            <div id="login-form-container" class="form-content">
+                <div class="login-header">
+                    <h2>Bienvenido</h2>
+                    <p>Inicia sesión para continuar</p>
+                </div>
+
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label>Usuario</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="login-username" placeholder="Ingresa tu usuario" required autofocus>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Contraseña</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="login-password" placeholder="Ingresa tu contraseña" required>
+                        </div>
+                    </div>
+
+                    <div class="forgot-password">
+                        <a id="show-forgot-password">
+                            ¿Olvidaste tu contraseña? <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                    </button>
+                </form>
+            </div>
+
+            <!-- Formulario de Recuperar Contraseña -->
+            <div id="forgot-password-container" class="form-content hidden">
+                <div class="login-header">
+                    <h2>Recuperar Contraseña</h2>
+                    <p>Te enviaremos un enlace de recuperación</p>
+                </div>
+
+                <form id="forgotForm">
+                    <div class="form-group">
+                        <label>Correo Electrónico</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="forgot-email" placeholder="tu@email.com" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-paper-plane"></i> Enviar Enlace de Recuperación
+                    </button>
+
+                    <div class="back-to-login">
+                        <a id="back-to-login">
+                            <i class="fas fa-arrow-left"></i> Volver al inicio de sesión
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p style="margin-top: 15px; color: #666;">Procesando...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== MANEJO DE VISTAS ====================
+        function showLoginForm() {
+            document.getElementById('login-form-container').classList.remove('hidden');
+            document.getElementById('forgot-password-container').classList.add('hidden');
+            hideMessages();
+        }
+
+        function showForgotPasswordForm() {
+            document.getElementById('login-form-container').classList.add('hidden');
+            document.getElementById('forgot-password-container').classList.remove('hidden');
+            hideMessages();
+            // Hacer foco en el campo de email
+            setTimeout(() => {
+                document.getElementById('forgot-email').focus();
+            }, 100);
+        }
+
+        // ==================== MENSAJES ====================
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            const errorText = document.getElementById('error-text');
+            errorText.textContent = message;
+            errorDiv.classList.add('show');
+            
+            setTimeout(() => {
+                errorDiv.classList.remove('show');
+            }, 5000);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('success-message');
+            const successText = document.getElementById('success-text');
+            successText.textContent = message;
+            successDiv.classList.add('show');
+            
+            setTimeout(() => {
+                successDiv.classList.remove('show');
+            }, 5000);
+        }
+
+        function hideMessages() {
+            document.getElementById('error-message').classList.remove('show');
+            document.getElementById('success-message').classList.remove('show');
+        }
+
+        function showLoading() {
+            document.getElementById('loading').classList.add('show');
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').classList.remove('show');
+        }
+
+        // ==================== NAVEGACIÓN ====================
+        document.getElementById('show-forgot-password').addEventListener('click', (e) => {
+            e.preventDefault();
+            showForgotPasswordForm();
+        });
+
+        document.getElementById('back-to-login').addEventListener('click', (e) => {
+            e.preventDefault();
+            showLoginForm();
+        });
+
+        // ==================== LOGIN ====================
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideMessages();
+            showLoading();
+            
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value;
+            
+            if (!username || !password) {
+                hideLoading();
+                showError('Por favor completa todos los campos');
+                return;
+            }
+            
+            try {
+                const formData = new FormData();
+                formData.append('username', username);
+                formData.append('password', password);
+                
+                const response = await fetch('/token', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    localStorage.setItem('token', data.access_token);
+                    localStorage.setItem('role', data.role);
+                    localStorage.setItem('username', data.username);
+                    
+                    showSuccess('Inicio de sesión exitoso. Redirigiendo...');
+                    
+                    setTimeout(() => {
+                        window.location.href = '/dashboard';
+                    }, 1000);
+                } else {
+                    hideLoading();
+                    showError(data.detail || 'Usuario o contraseña incorrectos');
+                    
+                    document.getElementById('login-password').value = '';
+                    document.getElementById('login-password').focus();
+                }
+            } catch (error) {
+                hideLoading();
+                console.error('Error:', error);
+                showError('Error de conexión. Verifica tu conexión a internet.');
+            }
+        });
+
+        // ==================== RECUPERAR CONTRASEÑA ====================
+        document.getElementById('forgotForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideMessages();
+            
+            const email = document.getElementById('forgot-email').value.trim();
+            
+            // Validar email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showError('Por favor ingresa un email válido');
+                return;
+            }
+            
+            showLoading();
+            
+            try {
+                const response = await fetch('/auth/forgot-password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email: email })
+                });
+                
+                const data = await response.json();
+                
+                hideLoading();
+                
+                if (response.ok) {
+                    showSuccess(' ' + data.message);
+                    document.getElementById('forgotForm').reset();
+                    
+                    showSuccess(' Si el email existe, recibirás un enlace de recuperación. Revisa también la consola del servidor para obtener el enlace directo.');
+                    
+                    setTimeout(() => {
+                        showLoginForm();
+                    }, 5000);
+                } else {
+                    showError(data.detail || 'Error al enviar el email de recuperación');
+                }
+            } catch (error) {
+                hideLoading();
+                console.error('Error:', error);
+                showError('Error de conexión. Verifica tu conexión a internet.');
+            }
+        });
+
+        // ==================== VERIFICAR SESIÓN ACTIVA ====================
+        if (localStorage.getItem('token')) {
+            fetch('/api/status', {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = '/dashboard';
+                } else {
+                    localStorage.clear();
+                }
+            })
+            .catch(() => {
+                localStorage.clear();
+            });
+        }
+
+        // ==================== ENTER PARA SUBMIT ====================
+        document.getElementById('login-username').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                document.getElementById('login-password').focus();
+            }
+        });
+
+        document.getElementById('login-password').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+            }
+        });
+    </script>
+</body>
+</html>
